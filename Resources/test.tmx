@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="40" height="25" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="TileA3-byLunarea" tilewidth="32" tileheight="32">
+  <image source="TileA3-byLunarea.png" width="512" height="256"/>
+ </tileset>
+ <layer name="backgroud" width="40" height="25">
+  <data encoding="base64" compression="zlib">
+   eJzt0aERACAQA8EXGCqjBgb7/dfwLYBKgBPrb5KMiAREmjn1PgDuMA0a6Hu3bxxS76WyDBro29PNqb/A3wpsJ2fV
+  </data>
+ </layer>
+ <objectgroup name="Objects">
+  <object name="hero" x="40.2722" y="615.192" width="22.2191" height="20.8304"/>
+ </objectgroup>
+</map>
