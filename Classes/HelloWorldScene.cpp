@@ -47,7 +47,6 @@ bool HelloWorld::init()
 //    _player=Sprite::create("taiga.png");
 //    _player->setPosition(x, y+20);
 //    addChild(_player);
-
     //添加人物
     hero=Hero::create();
     hero->InitHeroSprite("taiga.png");
@@ -69,8 +68,8 @@ bool HelloWorld::init()
   
 
     //添加点击事件
-    auto listerner=EventListenerTouchOneByOne::create();
-    listerner->setSwallowTouches(true);
+    auto listerner = EventListenerTouchAllAtOnce::create();
+//    listerner->setSwallowTouches(true);
 //    listerner->onTouchBegan=[](Touch* touch,Event* event){
 //        
 //        auto target = static_cast<Sprite*>(event->getCurrentTarget());
@@ -101,17 +100,21 @@ bool HelloWorld::init()
 //    };
 
     //使用 CC_CALLBACK_2
-    listerner->onTouchBegan=CC_CALLBACK_2(HelloWorld::onTouchBegan, this);
-    listerner->onTouchEnded=CC_CALLBACK_2(HelloWorld::onTouchEnded, this);
+    listerner->onTouchesBegan=CC_CALLBACK_2(HelloWorld::onTouchesBegan,this);
+    listerner->onTouchesEnded=CC_CALLBACK_2(HelloWorld::onTouchesEnded, this);
     this->_eventDispatcher->addEventListenerWithSceneGraphPriority(listerner, this);
     return true;
 }
 
-bool HelloWorld::onTouchBegan(cocos2d::Touch *touch, cocos2d::Event *event){
+void HelloWorld::onTouchesBegan(const std::vector<cocos2d::Touch*>& touch, cocos2d::Event *event){
     auto target = static_cast<Sprite*>(event->getCurrentTarget());
-    Point locationInNode = target->convertToNodeSpace(touch->getLocation());
+    Vector<Touch*>::const_iterator touchIter = touch.begin();
+    Touch *pTouch = (Touch*)(*touchIter);
+    Point locationInNode = target->convertToNodeSpace(pTouch->getLocation());
     log("sprite began... x = %f, y = %f", locationInNode.x, locationInNode.y);
     hero->walkto(locationInNode);
+
+   
 //    auto pos=hero->getPosition();
 //    
 //    hero->IsRunning=true;
@@ -127,11 +130,9 @@ bool HelloWorld::onTouchBegan(cocos2d::Touch *touch, cocos2d::Event *event){
 //        hero->walkto(pos);
 //    }
 
-  
-    return  true;
     
 }
-void HelloWorld::onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *event){
+void HelloWorld::onTouchesEnded(const std::vector<cocos2d::Touch*>& touch, cocos2d::Event *event){
     hero->StopAnimation();
 }
 

@@ -15,7 +15,8 @@ public:
     
     // a selector callback
     void menuCloseCallback(cocos2d::Ref* pSender);
-    
+    void onTouchesBegan(const std::vector<cocos2d::Touch*>& touch, cocos2d::Event *event);
+    void onTouchesEnded(const std::vector<cocos2d::Touch*>& touch, cocos2d::Event *event);
     // implement the "static create()" method manually
     CREATE_FUNC(HelloWorld);
     
@@ -24,8 +25,6 @@ private:
     cocos2d::Sprite *_player;
     Hero *hero;
     int herox;
-    bool onTouchBegan(cocos2d::Touch *touch, cocos2d::Event *unused_event);
-    void onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *unused_event);
     void onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event);
     void onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event);
     
