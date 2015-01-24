@@ -88,17 +88,19 @@ void Hero::walkto(cocos2d::Vec2 dest){
         auto move=MoveTo::create(3, pos);
         herosprite->runAction(move);
     }else if(dest.x>600&&dest.y<100){
-        IsRunning=true; 
-        IsJunping=true;
-        SetAnimation("taigajumplist.plist", "taigajumplist.png","taigajump",6,true);
-        auto jump=JumpTo::create(0.5,pos, 100, 1);
-        auto func=[&](){
-            IsJunping=false;
-//            this->StopAnimation();
-        };
-        auto callback=CallFunc::create(func);
-        Sequence *seq=Sequence::create(jump, callback, nullptr);
-        herosprite->runAction(seq);
+      IsRunning=true;
+        if (!IsJunping) {
+            IsJunping=true;
+            SetAnimation("taigajumplist.plist", "taigajumplist.png","taigajump",6,true);
+            auto jump=JumpTo::create(0.5,pos, 100, 1);
+            auto func=[&](){
+                IsJunping=false;
+                this->StopAnimation();
+            };
+            auto callback=CallFunc::create(func);
+            Sequence *seq=Sequence::create(jump, callback, nullptr);
+            herosprite->runAction(seq);
+        }
         
     }
   
