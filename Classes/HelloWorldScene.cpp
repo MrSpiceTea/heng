@@ -1,5 +1,5 @@
 #include "HelloWorldScene.h"
-
+#include "GameLayer.h"
 USING_NS_CC;
 
 Scene* HelloWorld::createScene()
@@ -38,6 +38,9 @@ bool HelloWorld::init()
     _map=TMXTiledMap::create("test.tmx");
     addChild(_map);
     
+    _meta=_map->getLayer("Meta");
+    _meta->setVisible(false);
+    
     TMXObjectGroup *tmxgroup=_map->getObjectGroup("Objects");
     CCASSERT(NULL!=tmxgroup, "'Objects' object group not found");
     auto tmxhero=tmxgroup->getObject("hero");
@@ -50,7 +53,9 @@ bool HelloWorld::init()
     //添加人物
     hero=Hero::create();
     hero->InitHeroSprite("taiga.png");
+
     hero->setPosition(x, y+22);
+    this->setPlayerPosition(hero->getPosition());
     addChild(hero);
   
     //添加按钮图片
@@ -111,7 +116,6 @@ void HelloWorld::onTouchesBegan(const std::vector<cocos2d::Touch*>& touch, cocos
     Vector<Touch*>::const_iterator touchIter = touch.begin();
     Touch *pTouch = (Touch*)(*touchIter);
     Point locationInNode = target->convertToNodeSpace(pTouch->getLocation());
-    log("sprite began... x = %f, y = %f", locationInNode.x, locationInNode.y);
     hero->walkto(locationInNode);
 
    
@@ -136,6 +140,29 @@ void HelloWorld::onTouchesEnded(const std::vector<cocos2d::Touch*>& touch, cocos
     hero->StopAnimation();
 }
 
+void HelloWorld::setPlayerPosition(Point position)
+{
+    Point tileCoord = this->tileCoordForPosition(position);
+    int tileGid = _meta->getTileGIDAt(tileCoord);
+    if (tileGid) {
+        auto properties = _map->getPropertiesForGID(tileGid).asValueMap();
+        if (!properties.empty()) {
+            auto collision = properties["Collidable"].asString();
+            if ("True" == collision) {
+                return;
+            }
+        }
+    }
+    
+    hero->setPosition(position);
+}
+//坐标转换
+Point HelloWorld::tileCoordForPosition(Point position)
+{
+    int x = position.x /_map->getTileSize().width;
+    int y = ((_map->getMapSize().height * _map->getTileSize().height) - position.y) / _map->getTileSize().height;
+    return Point(x, y);
+}
 // 键位响应函数原型
 void HelloWorld::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event)
 {

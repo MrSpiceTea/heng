@@ -15,6 +15,7 @@ Hero::Hero(void){
     IsJunping=false;
     HeroDirecton=false;//right
     hero_img_name=NULL;
+    IsRight=true;
 }
 Hero::~Hero(void)
 {
@@ -76,22 +77,29 @@ void Hero::walkto(cocos2d::Vec2 dest){
     auto pos=herosprite->getPosition();
 
     if (dest.x>110&&dest.x<230&&dest.y<100) {
+        IsRight=false;
         IsRunning=true;
         SetAnimation("taigelist.plist", "taigelist.png","taga",8,false);
         pos.x+=1000;
         auto move=MoveTo::create(3, pos);
         herosprite->runAction(move);
     }else if(dest.x<110&&dest.y<100){
+         IsRight=true;
         IsRunning=true;
         SetAnimation("taigelist.plist", "taigelist.png","taga",8,true);
         pos.x-=1000;
         auto move=MoveTo::create(3, pos);
         herosprite->runAction(move);
     }else if(dest.x>600&&dest.y<100){
-      IsRunning=true;
+        IsRunning=true;
         if (!IsJunping) {
             IsJunping=true;
-            SetAnimation("taigajumplist.plist", "taigajumplist.png","taigajump",6,true);
+            if (IsRight) {
+                 SetAnimation("taigajumplist.plist", "taigajumplist.png","taigajump",6,true);
+            }else{
+                 SetAnimation("taigajumplist.plist", "taigajumplist.png","taigajump",6,false);
+            }
+           
             auto jump=JumpTo::create(0.5,pos, 100, 1);
             auto func=[&](){
                 IsJunping=false;
